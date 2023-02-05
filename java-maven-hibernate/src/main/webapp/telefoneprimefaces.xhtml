@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<title>Cadastro Telefones</title>
+</h:head>
+
+<h:body>
+	<h:form>
+		<p:breadCrumb>
+			<p:menuitem action="index.jsf"/>
+			<p:menuitem value="Página Inicial JSF" action="index.jsf"/>
+			<p:menuitem value="Página PrimeFaces" action="primefaces.jsf"/>
+		</p:breadCrumb>
+	</h:form>
+
+	<h:form id="formCadastro">
+		<p:messages id="msg" showDetail="true" showSummary="false"/>
+	
+		<h:panelGrid columns="2" border="1" cellpadding="3">
+			<p:outputLabel value="Usuário:"/>
+			<p:outputLabel value="#{telefoneManagedBean.usuarioPessoa.nome}"/>
+			
+			<p:outputLabel value="Número:"/>
+			<p:inputText value="#{telefoneManagedBean.telefoneUser.numero}" required="true" requiredMessage="Número Obrigatório"/>
+			
+			<p:outputLabel value="Tipo:"/>
+			<p:inputText value="#{telefoneManagedBean.telefoneUser.tipo}" required="true" requiredMessage="Tipo Obrigatório"/>
+		</h:panelGrid>
+		<br/>
+		<p:commandButton value="Salvar" action="#{telefoneManagedBean.salvar}" ajax="false"/>
+	</h:form>
+
+	<h:form>
+		<p:dataTable value="#{telefoneManagedBean.usuarioPessoa.telefonesUser}" var="fone">
+			<f:facet name="header">Lista de Fones Cadastrados desse Usuário</f:facet>
+			
+			<p:column headerText="ID">
+				<h:outputText value="#{fone.id}"/>
+			</p:column>
+			
+			<p:column headerText="Número">
+				<h:outputText value="#{fone.numero}"/>
+			</p:column>
+			
+			<p:column headerText="Tipo">
+				<h:outputText value="#{fone.tipo}"/>
+			</p:column>
+			
+			<p:column headerText="Excluir">
+				<p:commandLink ajax="false" action="#{telefoneManagedBean.excluir}" title="Excluir">
+					<f:setPropertyActionListener value="#{fone}" target="#{telefoneManagedBean.telefoneUser}"/>
+					<h:graphicImage value="resources/img/excluir.png" width="40"/>
+					<f:ajax execute="@this" render="@form :formCadastro:msg"/>
+				</p:commandLink>
+			</p:column>
+			
+		</p:dataTable>
+	</h:form>
+
+</h:body>
+
+</html>

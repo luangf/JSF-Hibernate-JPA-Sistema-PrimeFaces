@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<title>Cadastro Telefones</title>
+</h:head>
+
+<h:body>
+	<h:form>
+		<p:breadCrumb>
+			<p:menuitem action="index.jsf"/>
+			<p:menuitem value="Página Inicial JSF" action="index.jsf"/>
+			<p:menuitem value="Página PrimeFaces" action="primefaces.jsf"/>
+		</p:breadCrumb>
+	</h:form>
+
+	<h:form id="formCadastro">
+		<h:messages showDetail="true"/>
+	
+		<h:panelGrid columns="2" border="1" cellpadding="3">
+			<h:outputLabel value="Usuário:"/>
+			<h:outputText value="#{telefoneManagedBean.usuarioPessoa.nome}"/>
+			
+			<h:outputLabel value="Número:"/>
+			<h:inputText value="#{telefoneManagedBean.telefoneUser.numero}"/>
+			
+			<h:outputLabel value="Tipo:"/>
+			<h:inputText value="#{telefoneManagedBean.telefoneUser.tipo}"/>
+		</h:panelGrid>
+		<br/>
+		<h:commandButton value="Salvar" action="#{telefoneManagedBean.salvar}"/>
+	</h:form>
+
+	<h:form>
+		<h:dataTable value="#{telefoneManagedBean.usuarioPessoa.telefonesUser}" var="fone" border="1" cellpadding="5">
+			<f:facet name="header">Lista de Fones Cadastrados desse Usuário</f:facet>
+			
+			<h:column>
+				<f:facet name="header">ID</f:facet>
+				<h:outputText value="#{fone.id}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Número</f:facet>
+				<h:outputText value="#{fone.numero}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Tipo</f:facet>
+				<h:outputText value="#{fone.tipo}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Excluir</f:facet>
+				<h:commandLink action="#{telefoneManagedBean.excluir}" title="Excluir">
+					<f:setPropertyActionListener value="#{fone}" target="#{telefoneManagedBean.telefoneUser}"/>
+					<h:graphicImage value="resources/img/excluir.png" width="40"/>
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
+	</h:form>
+
+</h:body>
+
+</html>
