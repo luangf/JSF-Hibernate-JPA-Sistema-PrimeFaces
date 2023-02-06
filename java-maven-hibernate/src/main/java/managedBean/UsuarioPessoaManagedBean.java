@@ -15,9 +15,14 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
+
 import com.google.gson.Gson;
 
+import dao.DaoEmail;
 import dao.DaoUsuario;
+import model.EmailUser;
 import model.UsuarioPessoa;
 
 @ViewScoped
@@ -26,11 +31,32 @@ public class UsuarioPessoaManagedBean {
 
 	private UsuarioPessoa usuarioPessoa = new UsuarioPessoa();
 	private List<UsuarioPessoa> list = new ArrayList<UsuarioPessoa>();
-	private DaoUsuario<UsuarioPessoa> daoGeneric=new DaoUsuario<UsuarioPessoa>();
+	private DaoUsuario<UsuarioPessoa> daoGeneric = new DaoUsuario<UsuarioPessoa>();
+	private BarChartModel barChartModel = new BarChartModel();
+	private EmailUser emailUser = new EmailUser();
+	private DaoEmail<EmailUser> daoEmail=new DaoEmail<EmailUser>();
 	
 	@PostConstruct
 	public void init() {
 		list = daoGeneric.listar(UsuarioPessoa.class);
+
+		ChartSeries userSalario = new ChartSeries("Salário dos Usuários");
+
+		for (UsuarioPessoa usuarioPessoa : list) {
+			userSalario.set(usuarioPessoa.getNome(), usuarioPessoa.getSalario());
+		}
+
+		barChartModel.setTitle("Gráfico de Salários");
+		barChartModel.addSeries(userSalario);
+	}
+
+	public void addEmail() {
+		emailUser.setUsuarioPessoa(usuarioPessoa);
+		emailUser=daoEmail.updateMerge(emailUser); //pega a PK, completando o obj
+		usuarioPessoa.getEmails().add(emailUser);
+		emailUser=new EmailUser();
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Resultado", "Email salvo com sucesso!"));
 	}
 	
 	public void pesquisaCep(AjaxBehaviorEvent event) {
@@ -68,6 +94,7 @@ public class UsuarioPessoaManagedBean {
 	public String salvar() {
 		daoGeneric.salvar(usuarioPessoa);
 		list.add(usuarioPessoa);
+		init();
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação:", "Salvo com sucesso"));
 		return "";
@@ -87,15 +114,19 @@ public class UsuarioPessoaManagedBean {
 			usuarioPessoa = new UsuarioPessoa();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação:", "Excluido com sucesso"));
-		}catch (Exception e) {
-			if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+		} catch (Exception e) {
+			if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação:", "Existem telefones desse usuário"));
-			}else {
+			} else {
 				e.printStackTrace();
 			}
 		}
 		return "";
+	}
+
+	public BarChartModel getBarChartModel() {
+		return barChartModel;
 	}
 
 	public UsuarioPessoa getUsuarioPessoa() {
@@ -108,6 +139,14 @@ public class UsuarioPessoaManagedBean {
 
 	public List<UsuarioPessoa> getList() {
 		return list;
+	}
+
+	public void setEmailUser(EmailUser emailUser) {
+		this.emailUser = emailUser;
+	}
+
+	public EmailUser getEmailUser() {
+		return emailUser;
 	}
 
 }

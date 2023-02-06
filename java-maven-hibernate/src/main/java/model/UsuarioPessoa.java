@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,8 +42,19 @@ public class UsuarioPessoa {
 	private Double salario;
 
 	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.EAGER)
-	private List<TelefoneUser> telefonesUser;
+	private List<TelefoneUser> telefonesUser=new ArrayList<TelefoneUser>();
+	
+	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.LAZY)
+	private List<EmailUser> emails=new ArrayList<EmailUser>();
 
+	public void setEmails(List<EmailUser> emails) {
+		this.emails = emails;
+	}
+	
+	public List<EmailUser> getEmails() {
+		return emails;
+	}
+	
 	public void setSalario(Double salario) {
 		this.salario = salario;
 	}

@@ -19,9 +19,11 @@
 	</h:form>
 
 	<h:form id="formCadastro">
-		<p:messages id="msg" showDetail="true"/>
+		<p:growl id="msg" showDetail="true"/>
 
-		<p:panelGrid columns="2">
+		<p:panelGrid columns="8">
+			<f:facet name="header">Cadastro de Usuário</f:facet>
+		
 			<p:outputLabel value="ID:" for="id"/>
 			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.id}" id="id" readonly="true"/>
 			
@@ -36,20 +38,51 @@
 				requiredMessage="Informe o sobrenome por favor"/>
 				
 			<p:outputLabel value="Sexo:"/>
-			<p:selectOneMenu value="#{usuarioPessoaManagedBean.usuarioPessoa.sexo}">
+			<p:selectOneMenu value="#{usuarioPessoaManagedBean.usuarioPessoa.sexo}" style="width:100%;">
 				<f:selectItem itemLabel="[-Selecione-]" itemValue="0"/>
 				<f:selectItem itemLabel="Feminino" itemValue="F"/>
 				<f:selectItem itemLabel="Masculino" itemValue="M"/>
 			</p:selectOneMenu>
 			
-			<p:outputLabel value="Email:" for="email"/>
-			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.email}" id="email"/>
+			<p:outputLabel value="CEP:"/>
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.cep}">
+				<!-- execute: envia dados para o back desse componente,value... -->
+				<f:ajax event="blur" execute="@this" listener="#{usuarioPessoaManagedBean.pesquisaCep}"
+					render="logradouro complemento bairro localidade uf ibge gia ddd siafi"/>
+			</p:inputText>
+			
+			<p:outputLabel value="Logradouro:"/>
+			<p:inputText id="logradouro" value="#{usuarioPessoaManagedBean.usuarioPessoa.logradouro}"/>
+			
+			<p:outputLabel value="Complemento:"/>
+			<p:inputText id="complemento" value="#{usuarioPessoaManagedBean.usuarioPessoa.complemento}"/>
+			
+			<p:outputLabel value="Bairro"/>
+			<p:inputText id="bairro" value="#{usuarioPessoaManagedBean.usuarioPessoa.bairro}"/>
+			
+			<p:outputLabel value="Localidade:"/>
+			<p:inputText id="localidade" value="#{usuarioPessoaManagedBean.usuarioPessoa.localidade}"/>
+			
+			<p:outputLabel value="Uf:"/>
+			<p:inputText id="uf" value="#{usuarioPessoaManagedBean.usuarioPessoa.uf}"/>
+			
+			<p:outputLabel value="Ibge:"/>
+			<p:inputText id="ibge" value="#{usuarioPessoaManagedBean.usuarioPessoa.ibge}"/>
+			
+			<p:outputLabel value="Gia:"/>
+			<p:inputText id="gia" value="#{usuarioPessoaManagedBean.usuarioPessoa.gia}"/>
+			
+			<p:outputLabel value="DDD:"/>
+			<p:inputText id="ddd" value="#{usuarioPessoaManagedBean.usuarioPessoa.ddd}"/>
+			
+			<p:outputLabel value="Siafi:"/>
+			<p:inputText id="siafi" value="#{usuarioPessoaManagedBean.usuarioPessoa.siafi}"/>
 			
 			<p:outputLabel value="Idade:" for="idade"/>
 			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.idade}" id="idade"/>
 			
 			<p:outputLabel value="Salário" for="salario"/>
-			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.salario}" id="salario"/>
+			<p:inputNumber value="#{usuarioPessoaManagedBean.usuarioPessoa.salario}" id="salario"/>
 			
 			<p:outputLabel value="Login:" for="login"/>
 			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.login}" id="login"/>
@@ -59,64 +92,85 @@
 		</p:panelGrid>
 		
 		<br/>
-		<p:commandButton value="Novo" action="#{usuarioPessoaManagedBean.novo}" title="Novo" immediate="true" style="margin-right:4px;">
+		<p:commandButton value="Novo" action="#{usuarioPessoaManagedBean.novo}" immediate="true" style="margin-right:4px;">
 				<f:ajax execute="@this" render="@form"/>
 		</p:commandButton>
 			
-		<p:commandButton ajax="false" value="Salvar" action="#{usuarioPessoaManagedBean.salvar}" title="Salvar"/>
+		<p:commandButton ajax="false" value="Salvar" action="#{usuarioPessoaManagedBean.salvar}"/>
 		
 	</h:form>
 
 	<br/>
 
-	<h:form>
+	<h:form id="formTable">
 		<p:dataTable value="#{usuarioPessoaManagedBean.list}" var="user">
 			<f:facet name="header">Lista de Usuários Cadastrados</f:facet>
 			
-			<p:column headerText="ID">
+			<p:column headerText="ID" width="25">
 				<h:outputText value="#{user.id}"/>
 			</p:column>
 			
-			<p:column headerText="Nome">
+			<p:column headerText="Nome" width="600">
 				<h:outputText value="#{user.nome}"/>
 			</p:column>
-			
-			<p:column headerText="Sobrenome">
-				<h:outputText value="#{user.sobrenome}"/>
+	
+			<p:column headerText="Editar" style="text-align:center;">
+				<center>
+					<h:commandLink id="botaoEditar" >
+						<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
+						<h:graphicImage value="resources/img/editar.png" width="40"/>
+						<f:ajax execute="botaoEditar" render=":formCadastro"/>
+					</h:commandLink>
+				</center>
 			</p:column>
 			
-			<p:column headerText="Email">
-				<h:outputText value="#{user.email}"/>
+			<p:column headerText="Excluir" style="text-align:center;">
+				<center>
+					<h:commandLink action="#{usuarioPessoaManagedBean.excluir}">
+						<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
+						<h:graphicImage value="resources/img/excluir.png" width="40"/>
+						<f:ajax execute="@this" render="@form :formCadastro:msg :grafico"/>
+					</h:commandLink>
+				</center>
 			</p:column>
 			
-			<p:column headerText="Login">
-				<h:outputText value="#{user.login}"/>
+			<p:column headerText="Telefones" style="text-align:center;">
+				<center>
+					<h:commandLink action="telefoneprimefaces">
+						<f:param name="idUser" value="#{user.id}"/>
+						<h:graphicImage value="resources/img/telefone.png" width="40"/>
+					</h:commandLink>
+				</center>
 			</p:column>
 			
-			<p:column headerText="Editar">
-				<h:commandLink title="Editar" id="botaoEditar">
-					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
-					<h:graphicImage value="resources/img/editar.png" width="40"/>
-					<f:ajax execute="botaoEditar" render=":formCadastro"/>
-				</h:commandLink>
-			</p:column>
-			
-			<p:column headerText="Excluir">
-				<h:commandLink action="#{usuarioPessoaManagedBean.excluir}" title="Excluir">
-					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
-					<h:graphicImage value="resources/img/excluir.png" width="40"/>
-					<f:ajax execute="@this" render="@form :formCadastro:msg"/>
-				</h:commandLink>
-			</p:column>
-			
-			<p:column headerText="Telefones">
-				<h:commandLink action="telefoneprimefaces" title="Telefones">
-					<f:param name="idUser" value="#{user.id}"/>
-					<h:graphicImage value="resources/img/telefone.png" width="40"/>
-				</h:commandLink>
+			<p:column headerText="Emails" style="text-align:center;">
+				<center>
+					<p:commandLink update=":formTable:dialogEmail" oncomplete="PF('dialogEmail').show()">
+						<h:graphicImage value="resources/img/email.png" width="40"/>
+						<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
+					</p:commandLink>
+				</center>
 			</p:column>
 		</p:dataTable>
+	
+		<p:dialog header="Emails" id="dialogEmail" widgetVar="dialogEmail" position="center" modal="true" width="490px"
+			resizable="false">
+			
+			<p:panelGrid columns="3">
+			
+				<p:outputLabel value="E-mail:"/>
+				<p:inputText value="#{usuarioPessoaManagedBean.emailUser.email}" id="emailUserAdd"/>
+				<p:commandButton value="Adicionar" actionListener="#{usuarioPessoaManagedBean.addEmail}"
+					update=":formCadastro:msg emailUserAdd"/>
+			
+			</p:panelGrid>
+			
+		</p:dialog>
+	
 	</h:form>
+	
+	<p:chart id="grafico" type="bar" model="#{usuarioPessoaManagedBean.barChartModel}"/>
+	
 </h:body>
 
 </html>

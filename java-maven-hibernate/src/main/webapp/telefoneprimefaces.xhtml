@@ -27,10 +27,17 @@
 			<p:outputLabel value="#{telefoneManagedBean.usuarioPessoa.nome}"/>
 			
 			<p:outputLabel value="Número:"/>
-			<p:inputText value="#{telefoneManagedBean.telefoneUser.numero}" required="true" requiredMessage="Número Obrigatório"/>
+			<p:inputMask value="#{telefoneManagedBean.telefoneUser.numero}" required="true" requiredMessage="Número Obrigatório"
+				mask="(99) 9 9999-9999"/>
 			
 			<p:outputLabel value="Tipo:"/>
-			<p:inputText value="#{telefoneManagedBean.telefoneUser.tipo}" required="true" requiredMessage="Tipo Obrigatório"/>
+			<p:selectOneMenu value="#{telefoneManagedBean.telefoneUser.tipo}" required="true" requiredMessage="Tipo Obrigatório"
+				style="width:100%;">
+				<f:selectItem itemValue="0" itemLabel="[-Selecione-]" noSelectionOption="true"/>
+				<f:selectItem itemValue="RECADO" itemLabel="Recado"/>
+				<f:selectItem itemValue="TRABALHO" itemLabel="Trabalho"/>
+				<f:selectItem itemValue="CASA" itemLabel="Casa"/>
+			</p:selectOneMenu>
 		</h:panelGrid>
 		<br/>
 		<p:commandButton value="Salvar" action="#{telefoneManagedBean.salvar}" ajax="false"/>
@@ -40,7 +47,7 @@
 		<p:dataTable value="#{telefoneManagedBean.usuarioPessoa.telefonesUser}" var="fone">
 			<f:facet name="header">Lista de Fones Cadastrados desse Usuário</f:facet>
 			
-			<p:column headerText="ID">
+			<p:column headerText="ID" width="25">
 				<h:outputText value="#{fone.id}"/>
 			</p:column>
 			
@@ -48,16 +55,18 @@
 				<h:outputText value="#{fone.numero}"/>
 			</p:column>
 			
-			<p:column headerText="Tipo">
+			<p:column headerText="Tipo" width="200">
 				<h:outputText value="#{fone.tipo}"/>
 			</p:column>
 			
-			<p:column headerText="Excluir">
-				<p:commandLink ajax="false" action="#{telefoneManagedBean.excluir}" title="Excluir">
-					<f:setPropertyActionListener value="#{fone}" target="#{telefoneManagedBean.telefoneUser}"/>
-					<h:graphicImage value="resources/img/excluir.png" width="40"/>
-					<f:ajax execute="@this" render="@form :formCadastro:msg"/>
-				</p:commandLink>
+			<p:column headerText="Excluir" width="50">
+				<center>
+					<p:commandLink ajax="false" action="#{telefoneManagedBean.excluir}" title="Excluir">
+						<f:setPropertyActionListener value="#{fone}" target="#{telefoneManagedBean.telefoneUser}"/>
+						<h:graphicImage value="resources/img/excluir.png" width="40"/>
+						<f:ajax execute="@this" render="@form :formCadastro:msg"/>
+					</p:commandLink>
+				</center>
 			</p:column>
 			
 		</p:dataTable>
