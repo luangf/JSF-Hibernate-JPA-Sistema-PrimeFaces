@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -41,20 +43,31 @@ public class UsuarioPessoa {
 	private String siafi;
 	private Double salario;
 
-	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.EAGER)
-	private List<TelefoneUser> telefonesUser=new ArrayList<TelefoneUser>();
-	
-	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.LAZY)
-	private List<EmailUser> emails=new ArrayList<EmailUser>();
+	@Column(columnDefinition = "text") // mudar o tipo da coluna para text, para aceitar img base 64, bem grande
+	private String imagem;
+
+	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<TelefoneUser> telefonesUser = new ArrayList<TelefoneUser>();
+
+	@OneToMany(mappedBy = "usuarioPessoa", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<EmailUser> emails = new ArrayList<EmailUser>();
+
+	public void setImagem(String imagem) {
+		this.imagem = imagem;
+	}
+
+	public String getImagem() {
+		return imagem;
+	}
 
 	public void setEmails(List<EmailUser> emails) {
 		this.emails = emails;
 	}
-	
+
 	public List<EmailUser> getEmails() {
 		return emails;
 	}
-	
+
 	public void setSalario(Double salario) {
 		this.salario = salario;
 	}
@@ -221,8 +234,8 @@ public class UsuarioPessoa {
 
 	@Override
 	public String toString() {
-		return "UsuarioPessoa [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", email=" + email
-				+ ", login=" + login + ", senha=" + senha + ", idade=" + idade + "]";
+		return "UsuarioPessoa [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", login=" + login
+				+ ", senha=" + senha + ", idade=" + idade + "]";
 	}
 
 	@Override

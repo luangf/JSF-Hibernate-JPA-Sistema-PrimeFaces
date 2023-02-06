@@ -79,7 +79,7 @@
 			<p:inputText id="siafi" value="#{usuarioPessoaManagedBean.usuarioPessoa.siafi}"/>
 			
 			<p:outputLabel value="Idade:" for="idade"/>
-			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.idade}" id="idade"/>
+			<p:inputNumber value="#{usuarioPessoaManagedBean.usuarioPessoa.idade}" id="idade"/>
 			
 			<p:outputLabel value="Salário" for="salario"/>
 			<p:inputNumber value="#{usuarioPessoaManagedBean.usuarioPessoa.salario}" id="salario"/>
@@ -89,6 +89,12 @@
 			
 			<p:outputLabel value="Senha:" for="senha"/>
 			<p:password value="#{usuarioPessoaManagedBean.usuarioPessoa.senha}" id="senha"/>
+			
+			<p:outputLabel value="Foto:"/>
+			<p:fileUpload mode="advanced" label="Adicionar" auto="true" update="imagem" listener="#{usuarioPessoaManagedBean.upload}"/>
+			
+			<p:outputLabel value="Imagem:"/>
+			<h:graphicImage id="imagem" value="#{usuarioPessoaManagedBean.usuarioPessoa.imagem}" width="120" height="120"/>
 		</p:panelGrid>
 		
 		<br/>
@@ -101,9 +107,21 @@
 	</h:form>
 
 	<br/>
-
+	
+	<h:form>
+		<p:panel header="Pesquisar Usuário por Nome">
+			<p:panelGrid columns="3">
+				<p:outputLabel value="Nome:"/>
+				<p:inputText value="#{usuarioPessoaManagedBean.campoPesquisa}"/>
+				<p:commandButton value="Buscar" actionListener="#{usuarioPessoaManagedBean.pesquisar}" update="formTable, :grafico"/>
+			</p:panelGrid>
+		</p:panel>
+	</h:form>
+	
+	<br/>
+	
 	<h:form id="formTable">
-		<p:dataTable value="#{usuarioPessoaManagedBean.list}" var="user">
+		<p:dataTable value="#{usuarioPessoaManagedBean.list}" var="user" rows="5" paginator="true" lazy="true" paginatorPosition="bottom">
 			<f:facet name="header">Lista de Usuários Cadastrados</f:facet>
 			
 			<p:column headerText="ID" width="25">
@@ -113,8 +131,17 @@
 			<p:column headerText="Nome" width="600">
 				<h:outputText value="#{user.nome}"/>
 			</p:column>
+			
+			<p:column headerText="Baixar Imagem" width="60" style="text-align:center;">
+				<center>
+					<h:commandLink immediate="true" actionListener="#{usuarioPessoaManagedBean.download}">
+						<f:param name="fileDownloadId" value="#{user.id}"/>
+						<h:graphicImage value="resources/img/imagemDownload.png" width="40"/>
+					</h:commandLink>
+				</center>
+			</p:column>
 	
-			<p:column headerText="Editar" style="text-align:center;">
+			<p:column headerText="Editar" style="text-align:center;" width="60">
 				<center>
 					<h:commandLink id="botaoEditar" >
 						<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
@@ -124,7 +151,7 @@
 				</center>
 			</p:column>
 			
-			<p:column headerText="Excluir" style="text-align:center;">
+			<p:column headerText="Excluir" style="text-align:center;" width="60">
 				<center>
 					<h:commandLink action="#{usuarioPessoaManagedBean.excluir}">
 						<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
@@ -134,7 +161,7 @@
 				</center>
 			</p:column>
 			
-			<p:column headerText="Telefones" style="text-align:center;">
+			<p:column headerText="Telefones" style="text-align:center;" width="60">
 				<center>
 					<h:commandLink action="telefoneprimefaces">
 						<f:param name="idUser" value="#{user.id}"/>
@@ -143,7 +170,7 @@
 				</center>
 			</p:column>
 			
-			<p:column headerText="Emails" style="text-align:center;">
+			<p:column headerText="Emails" style="text-align:center;" width="60">
 				<center>
 					<p:commandLink update=":formTable:dialogEmail" oncomplete="PF('dialogEmail').show()">
 						<h:graphicImage value="resources/img/email.png" width="40"/>
@@ -153,24 +180,46 @@
 			</p:column>
 		</p:dataTable>
 	
-		<p:dialog header="Emails" id="dialogEmail" widgetVar="dialogEmail" position="center" modal="true" width="490px"
-			resizable="false">
+		<p:dialog header="Emails" id="dialogEmail" widgetVar="dialogEmail" position="center" modal="true" width="500px"
+			resizable="false" >
 			
-			<p:panelGrid columns="3">
+			<p:panelGrid columns="3" style="width:100%;">
 			
 				<p:outputLabel value="E-mail:"/>
 				<p:inputText value="#{usuarioPessoaManagedBean.emailUser.email}" id="emailUserAdd"/>
 				<p:commandButton value="Adicionar" actionListener="#{usuarioPessoaManagedBean.addEmail}"
-					update=":formCadastro:msg emailUserAdd"/>
-			
+					update="formCadastro:msg emailUserAdd dataTableEmail"/>
+					
 			</p:panelGrid>
+			
+			<p:dataTable id="dataTableEmail" value="#{usuarioPessoaManagedBean.usuarioPessoa.emails}" var="email">
+				<p:column headerText="ID" style="text-align:center;" width="25">
+					<p:outputLabel value="#{email.id}"/>
+				</p:column>
+				
+				<p:column headerText="E-mail" style="text-align:center;" >
+					<p:outputLabel value="#{email.email}"/>
+				</p:column>
+				
+				<p:column headerText="Excluir" style="text-align:center;" width="60">
+					<center>
+						<h:commandLink actionListener="#{usuarioPessoaManagedBean.excluirEmail}">
+							<h:graphicImage value="resources/img/excluirEmail.png" width="40"/>
+							<f:param name="idEmail" value="#{email.id}"/>
+							<f:ajax execute="@this" render="dataTableEmail :formCadastro:msg"/>
+						</h:commandLink>
+					</center>
+				</p:column>
+			</p:dataTable>
 			
 		</p:dialog>
 	
 	</h:form>
 	
-	<p:chart id="grafico" type="bar" model="#{usuarioPessoaManagedBean.barChartModel}"/>
+	<br/>
+	<br/>
 	
+	<p:chart id="grafico" type="bar" model="#{usuarioPessoaManagedBean.barChartModel}" responsive="true"/>
 </h:body>
 
 </html>
