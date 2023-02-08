@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -56,15 +55,20 @@ public class UsuarioPessoaManagedBean {
 		
 		UsuarioPessoa pessoa=daoGeneric.pesquisar(Long.parseLong(fileDownloadId), UsuarioPessoa.class);
 		
-		byte[] imagem=new Base64().decodeBase64(pessoa.getImagem().split("\\,")[1]);
-		
-		HttpServletResponse response=(HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		response.addHeader("Content-Disposition", "attachment; filename=download.png");
-		response.setContentType("application/octet-stream");
-		response.setContentLength(imagem.length);
-		response.getOutputStream().write(imagem);
-		response.getOutputStream().flush();
-		FacesContext.getCurrentInstance().responseComplete();
+		if(pessoa.getImagem() != null && !pessoa.getImagem().isEmpty()) {
+			byte[] imagem=new Base64().decodeBase64(pessoa.getImagem().split("\\,")[1]);
+			
+			HttpServletResponse response=(HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+			response.addHeader("Content-Disposition", "attachment; filename=download.png");
+			response.setContentType("application/octet-stream");
+			response.setContentLength(imagem.length);
+			response.getOutputStream().write(imagem);
+			response.getOutputStream().flush();
+			FacesContext.getCurrentInstance().responseComplete();
+		}else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", "User não possue imagem!"));
+		}
 	}
 	
 	public void upload(FileUploadEvent image) {

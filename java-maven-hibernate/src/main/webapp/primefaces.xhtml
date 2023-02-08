@@ -6,15 +6,19 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title>Cadastro Users</title>
+	<title>Cadastro Users PrimeFaces</title>
 </h:head>
 
 <h:body>
 	<h:form>
-		<p:breadCrumb>
-			<p:menuitem action="index.jsf"/>
-			<p:menuitem value="Página Inicial JSF" action="index.jsf"/>
-			<p:menuitem value="Página PrimeFaces" action="primefaces.jsf"/>
+		<p:breadCrumb style="background-color: #2196f3;">
+			<p:menuitem action="index.jsf" style="color: white;"/>
+			<p:menuitem value="Página Inicial JSF" action="index.jsf">
+				<span style="color: white;">Página Inicial JSF</span>
+			</p:menuitem>
+			<p:menuitem value="Página PrimeFaces" action="primefaces.jsf" style="color: white;">
+				<span style="color: white;">Página PrimeFaces</span>
+			</p:menuitem>
 		</p:breadCrumb>
 	</h:form>
 
@@ -22,7 +26,7 @@
 		<p:growl id="msg" showDetail="true"/>
 
 		<p:panelGrid columns="8">
-			<f:facet name="header">Cadastro de Usuário</f:facet>
+			<f:facet name="header">Cadastro de Usuários com PrimeFaces</f:facet>
 		
 			<p:outputLabel value="ID:" for="id"/>
 			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.id}" id="id" readonly="true"/>
@@ -45,7 +49,7 @@
 			</p:selectOneMenu>
 			
 			<p:outputLabel value="CEP:"/>
-			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.cep}">
+			<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.cep}" placeholder="Web Service CEP">
 				<!-- execute: envia dados para o back desse componente,value... -->
 				<f:ajax event="blur" execute="@this" listener="#{usuarioPessoaManagedBean.pesquisaCep}"
 					render="logradouro complemento bairro localidade uf ibge gia ddd siafi"/>
@@ -180,7 +184,7 @@
 			</p:column>
 		</p:dataTable>
 	
-		<p:dialog header="Emails" id="dialogEmail" widgetVar="dialogEmail" position="center" modal="true" width="500px"
+		<p:dialog showEffect="fade" hideEffect="explode" style="margin-bottom: 300px;" header="Emails" id="dialogEmail" widgetVar="dialogEmail" position="center" modal="true" width="500px"
 			resizable="false" >
 			
 			<p:panelGrid columns="3" style="width:100%;">

@@ -7,17 +7,28 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
-	<title>Cadastro Users</title>
+	<title>Cadastro Users JSF</title>
 </h:head>
 
 <h:body>
 	<h:form>
-		<p:breadCrumb>
-			<p:menuitem action="index.jsf"/>
-			<p:menuitem value="Página Inicial JSF" action="index.jsf"/>
-			<p:menuitem value="Página PrimeFaces" action="primefaces.jsf"/>
+		<p:breadCrumb style="background-color: #2196f3;">
+			<p:menuitem action="index.jsf" style="color: white;"/>
+			<p:menuitem value="Página Inicial JSF" action="index.jsf">
+				<span style="color: white;">Página Inicial JSF</span>
+			</p:menuitem>
+			<p:menuitem value="Página PrimeFaces" action="primefaces.jsf" style="color: white;">
+				<span style="color: white;">Página PrimeFaces</span>
+			</p:menuitem>
 		</p:breadCrumb>
 	</h:form>
+
+	<a href="https://github.com/luangf/JSF-Hibernate-JPA-Sistema-PrimeFaces" 
+			target="_blank">
+			<span style="font-size: 20px;">Código Fonte do Projeto no Github</span>
+	</a>
+
+	<h3>Cadastro de Usuários em JSF</h3>
 
 	<h:form id="formCadastro">
 		<h:messages showDetail="true"/>
@@ -48,7 +59,7 @@
 			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.salario}" id="salaio"/>
 			
 			<h:outputLabel value="CEP:"/>
-			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.cep}">
+			<h:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.cep}" pt:placeholder="Web Service CEP">
 				<!-- execute: envia dados para o back desse componente,value... -->
 				<f:ajax event="blur" execute="@this" listener="#{usuarioPessoaManagedBean.pesquisaCep}"
 					render="logradouro complemento bairro localidade uf ibge gia ddd siafi"/>
