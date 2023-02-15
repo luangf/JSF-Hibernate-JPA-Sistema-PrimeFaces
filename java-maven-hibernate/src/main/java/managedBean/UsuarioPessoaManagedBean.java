@@ -44,6 +44,10 @@ public class UsuarioPessoaManagedBean {
 
 	@PostConstruct
 	public void init() {
+//		HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//		String url = req.getServletPath();
+//		if(url.equals("/index.jsf")) {
+//		}
 		list.load(0, 5, null, null);
 		montarGrafico();
 	}

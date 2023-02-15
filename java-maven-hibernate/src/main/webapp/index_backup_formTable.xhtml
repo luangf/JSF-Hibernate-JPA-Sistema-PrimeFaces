@@ -31,7 +31,7 @@
 	<h3>Cadastro de Usuários em JSF</h3>
 
 	<h:form id="formCadastro">
-		<h:messages showDetail="true" showSummary="false" style="background-color: #879ff1;"/>
+		<h:messages showDetail="true"/>
 	
 		<h:panelGrid columns="2" border="1" cellpadding="3">
 			<h:outputLabel value="ID:" for="id"/>
@@ -99,25 +99,64 @@
 			<h:inputSecret value="#{usuarioPessoaManagedBean.usuarioPessoa.senha}" id="senha"/>
 			
 		</h:panelGrid>
-		<br/>
-		<h:commandButton value="Novo" action="#{usuarioPessoaManagedBean.novo}" title="Novo"
-			style="padding: 13px; margin-right: 5px; background-color: #879ff1;" immediate="true"/>
-		<h:commandButton value="Salvar" action="#{usuarioPessoaManagedBean.salvar}" title="Salvar"
-			style="padding: 13px; background-color: #879ff1;"/>
+		
+		<h:commandButton value="Novo" action="#{usuarioPessoaManagedBean.novo}" title="Novo"/>
+		<h:commandButton value="Salvar" action="#{usuarioPessoaManagedBean.salvar}" title="Salvar"/>
 		
 	</h:form>
+
+	<br/>
 	
-	<h:form>	
-		<h:commandLink action="primefaces" immediate="true" style="text-decoration: none; margin-right: 800px;">
-			<div style="background-color: #2196f3; color: white; font-size: 25px; border: 5px;
-				padding:5px; margin-right: 800px;">
-				Os dados dos usuários Cadastrados estão na página:
-				Cadastro com PrimeFaces, CLIQUE AQUI e veja...
-			</div>
-		</h:commandLink>
-	</h:form>
-	<br/>
-	<br/>
+	<!--
+	<h:form id="formUsuariosCadastrados">
+		<h:dataTable value="#{usuarioPessoaManagedBean.list}" var="user" border="1" cellpadding="5">
+			<f:facet name="header">Lista de Usuários Cadastrados</f:facet>
+			
+			<h:column>
+				<f:facet name="header">ID</f:facet>
+				<h:outputText value="#{user.id}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Nome</f:facet>
+				<h:outputText value="#{user.nome}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Sobrenome</f:facet>
+				<h:outputText value="#{user.sobrenome}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Login</f:facet>
+				<h:outputText value="#{user.login}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Editar</f:facet>
+				<h:commandLink title="Editar">
+					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
+					<h:graphicImage value="resources/img/editar.png" width="40"/>
+				</h:commandLink>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Excluir</f:facet>
+				<h:commandLink action="#{usuarioPessoaManagedBean.excluir}" title="Excluir">
+					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
+					<h:graphicImage value="resources/img/excluir.png" width="40"/>
+				</h:commandLink>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Telefones</f:facet>
+				<h:commandLink action="telefone" title="Telefones">
+					<f:param name="idUser" value="#{user.id}"/>
+					<h:graphicImage value="resources/img/telefone.png" width="40"/>
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
+	</h:form>-->
 	
 </h:body>
 
